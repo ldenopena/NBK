@@ -1,0 +1,171 @@
+package com.nbk.barcodescanner.core;
+
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.os.Build;
+import android.util.AttributeSet;
+import android.view.View;
+
+public class ViewFinderViewTopArea extends View {
+    private static final String TAG = "ViewFinderView";
+
+    private Rect mFramingRect;
+
+    private static final int MIN_FRAME_WIDTH = 240;
+    private static final int MIN_FRAME_HEIGHT = 240;
+
+    private static final float LANDSCAPE_WIDTH_RATIO = 5f/8;
+    private static final float LANDSCAPE_HEIGHT_RATIO = 5f/8;
+    private static final int LANDSCAPE_MAX_FRAME_WIDTH = (int) (1920 * LANDSCAPE_WIDTH_RATIO); // = 5/8 * 1920
+    private static final int LANDSCAPE_MAX_FRAME_HEIGHT = (int) (1080 * LANDSCAPE_HEIGHT_RATIO); // = 5/8 * 1080
+
+    private static final float PORTRAIT_WIDTH_RATIO = 7f/8;
+    private static final float PORTRAIT_HEIGHT_RATIO = 3f/8;
+    private static final int PORTRAIT_MAX_FRAME_WIDTH = (int) (1080 * PORTRAIT_WIDTH_RATIO); // = 7/8 * 1080
+    private static final int PORTRAIT_MAX_FRAME_HEIGHT = (int) (1920 * PORTRAIT_HEIGHT_RATIO); // = 3/8 * 1920
+
+    private static final int[] SCANNER_ALPHA = {0, 64, 128, 192, 255, 192, 128, 64};
+    private int scannerAlpha;
+    private static final int POINT_SIZE = 10;
+    private static final long ANIMATION_DELAY = 80l;
+
+    private static final int ACTIONBAR_OPACITY = 0xDD000000;
+    private static final int VIEWFINDER_MASK = 0x60000000;
+    private static final int VIEWFINDER_LASER = 0xffcc0000;
+    private static final int VIEWFINDER_BORDER = 0xffafed44;
+    
+    private static final int VIEWFINDER_BORDER_WIDTH = 4;
+    private static final int VIEWFINDER_BORDER_LENGTH = 60;
+    
+    public ViewFinderViewTopArea(Context context) {
+        super(context);
+    }
+
+    public ViewFinderViewTopArea(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public void setupViewFinder() {
+        updateFramingRect();
+        invalidate();
+    }
+
+    public Rect getFramingRect() {
+        return mFramingRect;
+    }
+
+    @Override
+    public void onDraw(Canvas canvas) {
+        if(mFramingRect == null) {
+            return;
+        }
+
+        drawViewFinderMask(canvas);
+        drawViewFinderBorder(canvas);
+        drawLaser(canvas);
+    }
+
+    public void drawViewFinderMask(Canvas canvas) {
+        Paint paint = new Paint();
+        Resources resources = getResources();
+        paint.setColor(VIEWFINDER_MASK);
+
+        int width = canvas.getWidth();
+        int height = canvas.getHeight();
+
+        canvas.drawRect(0, 0, width, mFramingRect.top, paint);
+        canvas.drawRect(0, mFramingRect.top, mFramingRect.left, mFramingRect.bottom + 1, paint);
+        canvas.drawRect(mFramingRect.right + 1, mFramingRect.top, width, mFramingRect.bottom + 1, paint);
+        canvas.drawRect(0, mFramingRect.bottom + 1, width, mFramingRect.bottom + 31, paint);
+        
+        paint.setColor(0xFFFFFFFF);
+        canvas.drawRect(0, mFramingRect.bottom + 32, width, height, paint);
+        
+    }
+
+    public void drawViewFinderBorder(Canvas canvas) {
+        Paint paint = new Paint();
+        Resources resources = getResources();
+        paint.setColor(VIEWFINDER_BORDER);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(VIEWFINDER_BORDER_WIDTH);
+        int lineLength = VIEWFINDER_BORDER_LENGTH;
+
+        canvas.drawLine(mFramingRect.left - 1, mFramingRect.top - 1, mFramingRect.left - 1, mFramingRect.top - 1 + lineLength, paint);
+        canvas.drawLine(mFramingRect.left - 1, mFramingRect.top - 1, mFramingRect.left - 1 + lineLength, mFramingRect.top - 1, paint);
+
+        canvas.drawLine(mFramingRect.left - 1, mFramingRect.bottom + 1, mFramingRect.left - 1, mFramingRect.bottom + 1 - lineLength, paint);
+        canvas.drawLine(mFramingRect.left - 1, mFramingRect.bottom + 1, mFramingRect.left - 1 + lineLength, mFramingRect.bottom + 1, paint);
+
+        canvas.drawLine(mFramingRect.right + 1, mFramingRect.top - 1, mFramingRect.right + 1, mFramingRect.top - 1 + lineLength, paint);
+        canvas.drawLine(mFramingRect.right + 1, mFramingRect.top - 1, mFramingRect.right + 1 - lineLength, mFramingRect.top - 1, paint);
+
+        canvas.drawLine(mFramingRect.right + 1, mFramingRect.bottom + 1, mFramingRect.right + 1, mFramingRect.bottom + 1 - lineLength, paint);
+        canvas.drawLine(mFramingRect.right + 1, mFramingRect.bottom + 1, mFramingRect.right + 1 - lineLength, mFramingRect.bottom + 1, paint);
+    }
+
+    public void drawLaser(Canvas canvas) {
+        Paint paint = new Paint();
+        Resources resources = getResources();
+        // Draw a red "laser scanner" line through the middle to show decoding is active
+        paint.setColor(VIEWFINDER_LASER);
+        paint.setAlpha(SCANNER_ALPHA[scannerAlpha]);
+        paint.setStyle(Paint.Style.FILL);
+        scannerAlpha = (scannerAlpha + 1) % SCANNER_ALPHA.length;
+        int middle = mFramingRect.height() / 2 + mFramingRect.top;
+        canvas.drawRect(mFramingRect.left + 2, middle - 1, mFramingRect.right - 1, middle + 2, paint);
+
+        postInvalidateDelayed(ANIMATION_DELAY,
+                mFramingRect.left - POINT_SIZE,
+                mFramingRect.top - POINT_SIZE,
+                mFramingRect.right + POINT_SIZE,
+                mFramingRect.bottom + POINT_SIZE);
+    }
+
+    @Override
+    protected void onSizeChanged(int xNew, int yNew, int xOld, int yOld) {
+        updateFramingRect();
+    }
+
+    public synchronized void updateFramingRect() {
+        Point viewResolution = new Point(getWidth(), getHeight());
+        if (viewResolution == null) {
+            return;
+        }
+        int width;
+        int height;
+        int orientation = DisplayUtils.getScreenOrientation(getContext());
+
+        if(orientation != Configuration.ORIENTATION_PORTRAIT) {
+            width = findDesiredDimensionInRange(LANDSCAPE_WIDTH_RATIO, viewResolution.x, MIN_FRAME_WIDTH, LANDSCAPE_MAX_FRAME_WIDTH);
+            height = findDesiredDimensionInRange(LANDSCAPE_HEIGHT_RATIO, viewResolution.y, MIN_FRAME_HEIGHT, LANDSCAPE_MAX_FRAME_HEIGHT);
+        } else {
+            width = findDesiredDimensionInRange(PORTRAIT_WIDTH_RATIO, viewResolution.x, MIN_FRAME_WIDTH, PORTRAIT_MAX_FRAME_WIDTH);
+            height = findDesiredDimensionInRange(PORTRAIT_HEIGHT_RATIO, viewResolution.y, MIN_FRAME_HEIGHT, PORTRAIT_MAX_FRAME_HEIGHT);
+        }
+
+        int leftOffset = (viewResolution.x - width) / 2;
+        int topOffset = (viewResolution.y - height) / 2;
+        topOffset = 30; // louie added - remove line to return to original value
+        mFramingRect = new Rect(leftOffset, topOffset, leftOffset + width, topOffset + height);
+    }
+
+    private static int findDesiredDimensionInRange(float ratio, int resolution, int hardMin, int hardMax) {
+        int dim = (int) (ratio * resolution);
+        if (dim < hardMin) {
+            return hardMin;
+        }
+        if (dim > hardMax) {
+            return hardMax;
+        }
+        return dim;
+    }
+
+}
