@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/controls"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/nbk_rounded_corners" >
+<!-- 
+            <ListView
+                android:id="@+id/nbk_items"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+            </ListView>
+             -->
+            <com.baoyz.swipemenulistview.SwipeMenuListView
+		        android:id="@+id/nbk_items"
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/controls" >
+
+            <Button
+                android:id="@+id/nbk_sell"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_sell" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

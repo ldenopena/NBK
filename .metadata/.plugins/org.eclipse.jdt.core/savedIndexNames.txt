@@ -1,0 +1,8 @@
+INDEX VERSION 1.127+D:\Projects\Freelance\NBK Enterprises\MobileInventorySystem_v4(git)\.metadata\.plugins\org.eclipse.jdt.core
+2239368485.index
+1840524265.index
+369106050.index
+3533737066.index
+2507450606.index
+3515282563.index
+4191844947.index

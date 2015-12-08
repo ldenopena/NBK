@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/nbk_fragmentScanner"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <FrameLayout
+        android:id="@+id/nbk_cameraContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+        
+        <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:src="@drawable/blank"
+        android:scaleType="matrix"
+        />
+        
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/nbk_resultsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+    </FrameLayout>
+
+</FrameLayout>

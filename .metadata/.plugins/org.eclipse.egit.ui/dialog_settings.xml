@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<item value="2" key="org.eclipse.egit.ui.internal.clone.GitSelectWizardPageWizardSel"/>
+	<item value="619" key="DIALOG_WIDTH"/>
+	<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
+	<item value="538" key="DIALOG_HEIGHT"/>
+	<item value="499" key="DIALOG_X_ORIGIN"/>
+	<item value="80" key="DIALOG_Y_ORIGIN"/>
+	<list key="RepositorySelectionPage.UsedUris">
+		<item value="https://github.com/ldenopena/NBK.git"/>
+	</list>
+	<list key="CommitDialog.authorValues">
+		<item value="ldenopena &lt;ldenopena@gmail.com&gt;"/>
+	</list>
+	<list key="CommitDialog.committerValues">
+		<item value="ldenopena &lt;ldenopena@gmail.com&gt;"/>
+	</list>
+	<section name="org.eclipse.egit.ui.internal.dialogs.RebaseTargetSelectionDialog.dialogBounds">
+		<item value="538" key="DIALOG_WIDTH"/>
+		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
+		<item value="484" key="DIALOG_HEIGHT"/>
+		<item value="539" key="DIALOG_X_ORIGIN"/>
+		<item value="116" key="DIALOG_Y_ORIGIN"/>
+	</section>
+	<section name="GitImportWizard">
+	</section>
+	<section name="org.eclipse.egit.ui.COMMIT_DIALOG_SECTION">
+		<item value="642" key="DIALOG_WIDTH"/>
+		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
+		<item value="641" key="DIALOG_HEIGHT"/>
+		<item value="487" key="DIALOG_X_ORIGIN"/>
+		<item value="11" key="DIALOG_Y_ORIGIN"/>
+	</section>
+	<section name="GitCommitMessageComponent">
+		<list key="D:\Projects\Freelance\NBK Enterprises\MobileInventorySystem_v4(git)\NBK\.git">
+			<item value="empty"/>
+		</list>
+	</section>
+</section>
