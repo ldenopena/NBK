@@ -1,4 +1,4 @@
-package com.practice.spring.tester;
+package com.nbk.service.tester;
 
 import org.springframework.web.client.RestTemplate;
 
